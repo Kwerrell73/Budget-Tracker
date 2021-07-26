@@ -59,7 +59,7 @@ https://infinite-falls-12185.herokuapp.com/
 
 
 ## Testing
-✏️ Open Heroku site using a chrome browser.  Right click, and select inspect.  Navigate to Network tab and choose offline form the connection drop down menu. Add entries for either deposits or expenses (or both). Navigate to the Application tab, then under storage, navigate to the IndexedDB, then budget-tracker, and finally click on new_budget. The values you entered will be stored in the Key and Value columns.  In the Network tab, select the option "No Throttling".  Once online connection is restored, the cached data is sent.
+✏️ Open Heroku site using a chrome browser.  Right click, and select inspect.  Navigate to Network tab and choose offline from the connection drop down menu. Add entries for either deposits or expenses (or both). Navigate to the Application tab, then under storage, navigate to the IndexedDB, then budget-tracker, and finally click on new_budget. The values you entered will be stored in the Key and Value columns.  In the Network tab, select the option "No Throttling".  Once online connection is restored, the cached data is sent.
 
 <br>
 
