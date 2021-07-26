@@ -1,6 +1,8 @@
 const CACHE_NAME = 'budget-tracker-cache-v1';
 const DATA_CACHE_NAME = 'budget-cache-v1';
 
+const APP_PREFIX = 'budget-tracker';
+
 const FILES_TO_CACHE = [
     '/',
     '/public/index.html',
