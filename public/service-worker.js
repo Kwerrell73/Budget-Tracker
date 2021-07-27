@@ -20,9 +20,9 @@ const FILES_TO_CACHE = [
 ];
 
 
-
-self.addEventListener('install', function (evt) {
-    evt.waitUntil(
+// Install Service Worker
+self.addEventListener('install', function (e) {
+    e.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
             console.log('Your files were pre-cached successfully!');
             return cache.addAll(FILES_TO_CACHE);
@@ -32,14 +32,14 @@ self.addEventListener('install', function (evt) {
     self.skipWaiting();
 });
 
-// Activate the service worker and remove old data from the cache
-self.addEventListener('activate', function (evt) {
-    evt.waitUntil(
+// Activate the service worker ** remove cached data
+self.addEventListener('activate', function (e) {
+    e.waitUntil(
         caches.keys().then(keyList => {
             return Promise.all(
                 keyList.map(key => {
                     if (key !== CACHE_NAME && key !== DATA_CACHE_NAME) {
-                        console.log('Removing old cache data', key);
+                        console.log('Removing cached data', key);
                         return caches.delete(key);
                     }
                 })
@@ -50,13 +50,12 @@ self.addEventListener('activate', function (evt) {
     self.clients.claim();
 });
 
-// Intercept fetch requests
+// Fetch
 self.addEventListener('fetch', function (evt) {
     if (evt.request.url.includes('/api/')) {
         evt.respondWith(
             caches
-                .open(DATA_CACHE_NAME)
-                .then(cache => {
+                .open(DATA_CACHE_NAME).then(cache => {
                     return fetch(evt.request)
                         .then(response => {
                             // Clone response and store it in the cache.
@@ -67,7 +66,7 @@ self.addEventListener('fetch', function (evt) {
                             return response;
                         })
                         .catch(err => {
-                            // Network request failed, try to access the data from the cache.
+                            // Access data from the cache 
                             return cache.match(evt.request);
                         });
                 })
@@ -79,14 +78,15 @@ self.addEventListener('fetch', function (evt) {
 
     evt.respondWith(
         fetch(evt.request).catch(function () {
-            return caches.match(evt.request).then(function (response) {
-                if (response) {
-                    return response;
-                } else if (evt.request.headers.get('accept').includes('text/html')) {
-                    // For all HTML page requests, return the cached home page 
-                    return caches.match('/');
-                }
-            });
+            return caches.match(evt.request)
+                .then(function (response) {
+                    if (response) {
+                        return response;
+                    } else if (evt.request.headers.get('accept').includes('text/html')) {
+                        // For all HTML page requests, return the cached home page 
+                        return caches.match('/');
+                    }
+                });
         })
     );
 });
